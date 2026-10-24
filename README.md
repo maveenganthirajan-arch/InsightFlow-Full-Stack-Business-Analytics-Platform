@@ -15,6 +15,26 @@
 Clone the repository and launch the platform in 4 simple commands:
 
 ```bash
+
+
+Step 1: Open the Project Folder
+Launch Visual Studio Code.
+Click File > Open Folder... (or press Ctrl + K, Ctrl + O).
+Select this folder:
+c:\Users\ELCOT\Downloads\INTERVIEW\InsightFlow-Full-Stack-Business-Analytics-Platform-main\InsightFlow-Full-Stack-Business-Analytics-Platform-main\InsightFlow_GitHub_Ready
+Step 2: Run the App (Two Easy Methods)
+Method A: Using 1-Click Run / Debug (Recommended)
+
+Pre-configured VS Code settings and launch targets have been set up for you:
+
+In the left sidebar, click the Run and Debug icon (or press Ctrl + Shift + D).
+Make sure "InsightFlow: Run Web App" is selected in the top dropdown.
+Click the green Play button (or press F5).
+Method B: Using the Integrated Terminal
+Open the terminal in VS Code: Press Ctrl + ` (or go to Terminal > New Terminal).
+Run:
+powershell
+python run.py
 # 1. Navigate to the project directory
 cd InsightFlow
 
