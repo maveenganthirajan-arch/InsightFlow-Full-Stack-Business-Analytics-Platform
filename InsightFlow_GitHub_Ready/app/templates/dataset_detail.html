@@ -1,0 +1,144 @@
+{% extends "base.html" %}
+
+{% block title %}{{ dataset.original_filename }} — InsightFlow{% endblock %}
+
+{% block content %}
+<div class="header-actions-row">
+  <div>
+    <div style="display: flex; align-items: center; gap: 12px;">
+      <h1 class="page-title">{{ dataset.original_filename }}</h1>
+      {% if dataset.is_cleaned %}
+      <span class="pill-growth" style="background-color: #E6F9F0; color: #10B981;">Cleaned</span>
+      {% else %}
+      <span class="pill-growth" style="background-color: #FEF6E6; color: #FFA502;">Raw</span>
+      {% endif %}
+    </div>
+    <p class="page-subtitle">Uploaded {{ dataset.created_at.strftime('%B %d, %Y at %H:%M') }} &bull; {{ "{:,.1f}".format(dataset.file_size_kb) }} KB</p>
+  </div>
+
+  <div class="header-controls">
+    <a href="{{ url_for('analytics.dashboard', dataset_id=dataset.id) }}" class="btn-export">
+      <i class="fa-solid fa-chart-pie"></i>
+      <span>Open in Dashboard</span>
+    </a>
+    <a href="{{ url_for('analytics.clean', dataset_id=dataset.id) }}" class="btn-pill-subtle" style="color: var(--accent-amber);">
+      <i class="fa-solid fa-broom"></i>
+      <span>Clean Data</span>
+    </a>
+    <a href="{{ url_for('datasets.download_dataset', dataset_id=dataset.id) }}" class="btn-pill-subtle">
+      <i class="fa-solid fa-download"></i>
+      <span>Download</span>
+    </a>
+  </div>
+</div>
+
+<!-- Quality Overview Cards -->
+<div class="kpi-grid" style="grid-template-columns: repeat(4, 1fr); margin-bottom: 24px;">
+  <div class="stat-card">
+    <div class="kpi-header">
+      <div class="kpi-icon-badge purple"><i class="fa-solid fa-list-ol"></i></div>
+      <span class="kpi-label">Total Rows</span>
+    </div>
+    <div class="kpi-value">{{ "{:,}".format(dataset.row_count) }}</div>
+  </div>
+
+  <div class="stat-card">
+    <div class="kpi-header">
+      <div class="kpi-icon-badge cyan"><i class="fa-solid fa-table-columns"></i></div>
+      <span class="kpi-label">Columns</span>
+    </div>
+    <div class="kpi-value">{{ dataset.column_count }}</div>
+  </div>
+
+  <div class="stat-card">
+    <div class="kpi-header">
+      <div class="kpi-icon-badge amber"><i class="fa-solid fa-triangle-exclamation"></i></div>
+      <span class="kpi-label">Duplicate Rows</span>
+    </div>
+    <div class="kpi-value">{{ summary.duplicate_rows|default(0) }}</div>
+  </div>
+
+  <div class="stat-card">
+    <div class="kpi-header">
+      <div class="kpi-icon-badge green"><i class="fa-solid fa-check-double"></i></div>
+      <span class="kpi-label">File Type</span>
+    </div>
+    <div class="kpi-value" style="font-size: 20px; text-transform: uppercase;">
+      {{ dataset.original_filename.rsplit('.', 1)[-1] }}
+    </div>
+  </div>
+</div>
+
+<!-- Schema & Column Types -->
+<div class="chart-card" style="margin-bottom: 24px;">
+  <div class="chart-header">
+    <h3 class="chart-title">Column Schema & Quality Analysis</h3>
+  </div>
+  <div style="overflow-x: auto;">
+    <table class="sources-table">
+      <thead>
+        <tr>
+          <th>Column Name</th>
+          <th>Data Type</th>
+          <th>Missing Values</th>
+          <th>Missing %</th>
+          <th>Sample Values</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for col in columns %}
+        {% set col_str = col|string %}
+        {% set miss_info = summary.missing_info[col_str] if summary.missing_info and col_str in summary.missing_info else {'count': 0, 'percent': 0} %}
+        {% set dtype_val = summary.dtypes[col_str] if summary.dtypes and col_str in summary.dtypes else 'unknown' %}
+        {% set samples = summary.sample_values[col_str] if summary.sample_values and col_str in summary.sample_values else [] %}
+        <tr>
+          <td style="font-weight: 700; color: var(--text-main);">{{ col }}</td>
+          <td><code style="background: #F1F5F9; padding: 3px 8px; border-radius: 6px; font-size: 12px;">{{ dtype_val }}</code></td>
+          <td>{{ miss_info.count }}</td>
+          <td>
+            {% if miss_info.percent > 0 %}
+            <span style="color: #EF4444; font-weight: 700;">{{ miss_info.percent }}%</span>
+            {% else %}
+            <span style="color: var(--accent-green); font-weight: 600;">0%</span>
+            {% endif %}
+          </td>
+          <td style="color: var(--text-muted); font-size: 12px;">
+            {{ samples|join(', ') }}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Preview Table -->
+<div class="chart-card">
+  <div class="chart-header">
+    <h3 class="chart-title">Data Records Preview (First 50 Rows)</h3>
+    <span style="font-size: 12.5px; color: var(--text-muted);">Displaying sample records</span>
+  </div>
+  <div style="overflow-x: auto; max-height: 480px;">
+    <table class="sources-table" style="font-size: 12.5px;">
+      <thead style="position: sticky; top: 0; background: #FFFFFF; z-index: 10;">
+        <tr>
+          {% for col in columns %}
+          <th style="padding: 10px 14px; white-space: nowrap;">{{ col }}</th>
+          {% endfor %}
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in preview_data %}
+        <tr>
+          {% for col in columns %}
+          <td style="padding: 9px 14px; white-space: nowrap; color: var(--text-main);">
+            {{ row[col] }}
+          </td>
+          {% endfor %}
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

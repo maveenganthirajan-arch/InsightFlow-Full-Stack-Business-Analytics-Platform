@@ -1,0 +1,43 @@
+order_id,order_date,customer_id,region,category,product,channel,quantity,sales,cost,status
+ORD-2025-00001,2025-01-05,CUST-1042,North America,Subscriptions,Cloud Subscriptions Enterprise,Direct,1,450.00,126.00,Completed
+ORD-2025-00002,2025-01-08,CUST-1189,Europe,Services,Professional Consulting Service,Search,2,1200.00,540.00,Completed
+ORD-2025-00003,2025-01-12,CUST-2041,Asia Pacific,Downloads,API Data Exports & Downloads,Direct,3,360.00,54.00,Completed
+ORD-2025-00004,2025-01-15,CUST-3102,North America,Subscriptions,Developer SDK Pro,Referrals,1,220.00,48.40,Completed
+ORD-2025-00005,2025-01-22,CUST-1823,Latin America,Services,Implementation & Onboarding,Social,1,650.00,325.00,Completed
+ORD-2025-00006,2025-02-03,CUST-1042,North America,Subscriptions,Cloud Subscriptions Enterprise,Direct,2,900.00,252.00,Completed
+ORD-2025-00007,2025-02-14,CUST-2849,Europe,Downloads,API Data Exports & Downloads,Search,4,480.00,72.00,Completed
+ORD-2025-00008,2025-02-20,CUST-3912,Asia Pacific,Services,Professional Consulting Service,Referrals,1,750.00,337.50,Completed
+ORD-2025-00009,2025-03-05,CUST-1522,North America,Subscriptions,Cloud Subscriptions Enterprise,Direct,1,450.00,126.00,Completed
+ORD-2025-00010,2025-03-18,CUST-2201,Europe,Subscriptions,Developer SDK Pro,Direct,2,440.00,96.80,Completed
+ORD-2025-00011,2025-03-25,CUST-3041,North America,Services,Implementation & Onboarding,Search,1,700.00,350.00,Completed
+ORD-2025-00012,2025-04-02,CUST-1190,Asia Pacific,Subscriptions,Cloud Subscriptions Enterprise,Search,3,1350.00,378.00,Completed
+ORD-2025-00013,2025-04-14,CUST-2415,North America,Downloads,API Data Exports & Downloads,Social,2,240.00,36.00,Completed
+ORD-2025-00014,2025-04-28,CUST-3810,Europe,Services,Professional Consulting Service,Direct,1,850.00,382.50,Completed
+ORD-2025-00015,2025-05-09,CUST-1042,North America,Subscriptions,Cloud Subscriptions Enterprise,Direct,1,450.00,126.00,Completed
+ORD-2025-00016,2025-05-19,CUST-2993,Latin America,Subscriptions,Developer SDK Pro,Referrals,1,220.00,48.40,Completed
+ORD-2025-00017,2025-06-04,CUST-3184,Europe,Services,Implementation & Onboarding,Search,2,1400.00,700.00,Completed
+ORD-2025-00018,2025-06-18,CUST-1224,North America,Subscriptions,Cloud Subscriptions Enterprise,Direct,2,900.00,252.00,Completed
+ORD-2025-00019,2025-07-07,CUST-2041,Asia Pacific,Downloads,API Data Exports & Downloads,Direct,5,600.00,90.00,Completed
+ORD-2025-00020,2025-07-22,CUST-3510,North America,Services,Professional Consulting Service,Search,1,900.00,405.00,Completed
+ORD-2025-00021,2025-08-11,CUST-1650,Europe,Subscriptions,Developer SDK Pro,Direct,2,440.00,96.80,Completed
+ORD-2025-00022,2025-08-27,CUST-2731,North America,Subscriptions,Cloud Subscriptions Enterprise,Referrals,1,450.00,126.00,Completed
+ORD-2025-00023,2025-09-08,CUST-3882,Asia Pacific,Services,Implementation & Onboarding,Direct,1,720.00,360.00,Completed
+ORD-2025-00024,2025-09-23,CUST-1042,North America,Subscriptions,Cloud Subscriptions Enterprise,Direct,1,450.00,126.00,Completed
+ORD-2025-00025,2025-10-10,CUST-2184,Europe,Downloads,API Data Exports & Downloads,Search,3,360.00,54.00,Completed
+ORD-2025-00026,2025-10-25,CUST-3291,Latin America,Services,Professional Consulting Service,Social,1,800.00,360.00,Completed
+ORD-2025-00027,2025-11-06,CUST-1492,North America,Subscriptions,Cloud Subscriptions Enterprise,Direct,3,1350.00,378.00,Completed
+ORD-2025-00028,2025-11-20,CUST-2512,Europe,Subscriptions,Developer SDK Pro,Search,1,220.00,48.40,Completed
+ORD-2025-00029,2025-12-08,CUST-3670,North America,Services,Implementation & Onboarding,Direct,2,1440.00,720.00,Completed
+ORD-2025-00030,2025-12-22,CUST-1042,Asia Pacific,Subscriptions,Cloud Subscriptions Enterprise,Referrals,2,900.00,252.00,Completed
+ORD-2024-00031,2024-01-10,CUST-1042,North America,Subscriptions,Cloud Subscriptions Enterprise,Direct,1,380.00,106.40,Completed
+ORD-2024-00032,2024-02-15,CUST-1189,Europe,Services,Professional Consulting Service,Search,1,600.00,270.00,Completed
+ORD-2024-00033,2024-03-20,CUST-2041,Asia Pacific,Downloads,API Data Exports & Downloads,Direct,2,200.00,30.00,Completed
+ORD-2024-00034,2024-04-18,CUST-3102,North America,Subscriptions,Developer SDK Pro,Referrals,1,190.00,41.80,Completed
+ORD-2024-00035,2024-05-12,CUST-1823,Latin America,Services,Implementation & Onboarding,Social,1,550.00,275.00,Completed
+ORD-2024-00036,2024-06-25,CUST-1042,North America,Subscriptions,Cloud Subscriptions Enterprise,Direct,1,380.00,106.40,Completed
+ORD-2024-00037,2024-07-14,CUST-2849,Europe,Downloads,API Data Exports & Downloads,Search,3,300.00,45.00,Completed
+ORD-2024-00038,2024-08-19,CUST-3912,Asia Pacific,Services,Professional Consulting Service,Referrals,1,650.00,292.50,Completed
+ORD-2024-00039,2024-09-22,CUST-1522,North America,Subscriptions,Cloud Subscriptions Enterprise,Direct,1,380.00,106.40,Completed
+ORD-2024-00040,2024-10-15,CUST-2201,Europe,Subscriptions,Developer SDK Pro,Direct,1,190.00,41.80,Completed
+ORD-2024-00041,2024-11-28,CUST-3041,North America,Services,Implementation & Onboarding,Search,1,600.00,300.00,Completed
+ORD-2024-00042,2024-12-14,CUST-1190,Asia Pacific,Subscriptions,Cloud Subscriptions Enterprise,Search,2,760.00,212.80,Completed

@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block title %}File Too Large (413) — InsightFlow{% endblock %}
+
+{% block content %}
+<div class="stat-card" style="text-align: center; padding: 70px 20px; max-width: 600px; margin: 40px auto;">
+  <div style="font-size: 54px; color: var(--accent-amber); margin-bottom: 12px;">
+    <i class="fa-solid fa-file-circle-exclamation"></i>
+  </div>
+  <h2 style="font-size: 20px; font-weight: 700; margin-bottom: 8px;">Uploaded File Exceeds Limit</h2>
+  <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 24px;">
+    InsightFlow accepts business dataset files up to 16MB. Please compress or subset your spreadsheet and try again.
+  </p>
+  <a href="{{ url_for('datasets.upload') }}" class="btn-export">
+    <i class="fa-solid fa-arrow-up-from-bracket"></i>
+    <span>Upload Smaller File</span>
+  </a>
+</div>
+{% endblock %}

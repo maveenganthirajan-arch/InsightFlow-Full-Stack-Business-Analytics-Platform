@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+
+{% block title %}Datasets — InsightFlow{% endblock %}
+
+{% block content %}
+<div class="header-actions-row">
+  <div>
+    <h1 class="page-title">Dataset Management</h1>
+    <p class="page-subtitle">Inspect, clean, and manage your business datasets.</p>
+  </div>
+  <a href="{{ url_for('datasets.upload') }}" class="btn-export">
+    <i class="fa-solid fa-cloud-arrow-up"></i>
+    <span>Upload Dataset</span>
+  </a>
+</div>
+
+{% if datasets %}
+<div class="stat-card" style="padding: 0; overflow: hidden;">
+  <table class="sources-table" style="margin: 0;">
+    <thead style="background-color: #F8FAFC;">
+      <tr>
+        <th style="padding: 16px 24px;">Dataset Name</th>
+        <th style="padding: 16px;">Records</th>
+        <th style="padding: 16px;">Columns</th>
+        <th style="padding: 16px;">Size</th>
+        <th style="padding: 16px;">Status</th>
+        <th style="padding: 16px;">Uploaded</th>
+        <th style="padding: 16px 24px; text-align: right;">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for d in datasets %}
+      <tr>
+        <td style="padding: 16px 24px;">
+          <div class="product-cell">
+            <div class="product-icon" style="background-color: #ECEBFC; color: var(--primary-purple);">
+              <i class="fa-solid fa-table"></i>
+            </div>
+            <div>
+              <a href="{{ url_for('datasets.view_dataset', dataset_id=d.id) }}" style="text-decoration: none; color: var(--text-main); font-weight: 700;">
+                {{ d.original_filename }}
+              </a>
+            </div>
+          </div>
+        </td>
+        <td style="padding: 16px; font-weight: 600;">{{ "{:,}".format(d.row_count) }}</td>
+        <td style="padding: 16px; color: var(--text-muted);">{{ d.column_count }}</td>
+        <td style="padding: 16px; color: var(--text-muted);">{{ "{:,.1f}".format(d.file_size_kb) }} KB</td>
+        <td style="padding: 16px;">
+          {% if d.is_cleaned %}
+          <span class="pill-growth" style="background-color: #E6F9F0; color: #10B981;">
+            <i class="fa-solid fa-circle-check" style="margin-right: 4px;"></i> Cleaned
+          </span>
+          {% else %}
+          <span class="pill-growth" style="background-color: #FEF6E6; color: #FFA502;">
+            <i class="fa-solid fa-circle-dot" style="margin-right: 4px;"></i> Raw
+          </span>
+          {% endif %}
+        </td>
+        <td style="padding: 16px; font-size: 12.5px; color: var(--text-muted);">
+          {{ d.created_at.strftime('%b %d, %Y') }}
+        </td>
+        <td style="padding: 16px 24px; text-align: right;">
+          <div style="display: inline-flex; gap: 8px; align-items: center;">
+            <a href="{{ url_for('analytics.dashboard', dataset_id=d.id) }}" class="btn-pill-subtle" title="View in Executive Dashboard" style="padding: 6px 12px; font-size: 12px;">
+              <i class="fa-solid fa-chart-pie" style="color: var(--primary-purple);"></i>
+              <span>Dashboard</span>
+            </a>
+            <a href="{{ url_for('datasets.view_dataset', dataset_id=d.id) }}" class="btn-pill-subtle" title="Preview and Summary" style="padding: 6px 12px; font-size: 12px;">
+              <i class="fa-solid fa-eye"></i>
+            </a>
+            <a href="{{ url_for('analytics.clean', dataset_id=d.id) }}" class="btn-pill-subtle" title="Clean Dataset" style="padding: 6px 12px; font-size: 12px;">
+              <i class="fa-solid fa-broom" style="color: var(--accent-amber);"></i>
+            </a>
+            <a href="{{ url_for('datasets.download_dataset', dataset_id=d.id) }}" class="btn-pill-subtle" title="Download File" style="padding: 6px 12px; font-size: 12px;">
+              <i class="fa-solid fa-download"></i>
+            </a>
+            <form action="{{ url_for('datasets.delete_dataset', dataset_id=d.id) }}" method="POST" style="display: inline;" onsubmit="return confirm('Are you sure you want to delete this dataset?');">
+              <button type="submit" class="btn-pill-subtle" style="padding: 6px 10px; font-size: 12px; color: #EF4444;" title="Delete Dataset">
+                <i class="fa-regular fa-trash-can"></i>
+              </button>
+            </form>
+          </div>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% else %}
+<div class="stat-card" style="text-align: center; padding: 60px 20px;">
+  <div style="width: 64px; height: 64px; border-radius: 50%; background-color: #ECEBFC; color: var(--primary-purple); display: flex; align-items: center; justify-content: center; margin: 0 auto 16px auto; font-size: 26px;">
+    <i class="fa-solid fa-folder-open"></i>
+  </div>
+  <h3 style="font-size: 18px; font-weight: 700; margin-bottom: 8px;">No datasets uploaded yet</h3>
+  <p style="color: var(--text-muted); font-size: 14px; max-width: 480px; margin: 0 auto 20px auto;">
+    Upload your sales, e-commerce, or retail data in CSV or Excel format to calculate KPIs and build interactive dashboards.
+  </p>
+  <a href="{{ url_for('datasets.upload') }}" class="btn-export">
+    <i class="fa-solid fa-cloud-arrow-up"></i>
+    <span>Upload Your First Dataset</span>
+  </a>
+</div>
+{% endif %}
+{% endblock %}

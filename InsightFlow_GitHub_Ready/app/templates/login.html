@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Log In — InsightFlow</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <style>
+    body {
+      background: linear-gradient(135deg, #151928 0%, #1E2338 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+    .auth-card {
+      background: #FFFFFF;
+      width: 100%;
+      max-width: 440px;
+      border-radius: 20px;
+      padding: 40px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+    }
+    .form-group {
+      margin-bottom: 18px;
+    }
+    .form-label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-main);
+      margin-bottom: 6px;
+    }
+    .form-control {
+      width: 100%;
+      padding: 12px 16px;
+      border-radius: 10px;
+      border: 1px solid var(--border-subtle);
+      font-size: 14px;
+      outline: none;
+      transition: all 0.2s ease;
+    }
+    .form-control:focus {
+      border-color: var(--primary-purple);
+      box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.15);
+    }
+  </style>
+</head>
+<body>
+  <div class="auth-card">
+    <div style="text-align: center; margin-bottom: 28px;">
+      <div style="width: 52px; height: 52px; background: linear-gradient(135deg, #6C5CE7, #8072FA); border-radius: 14px; display: inline-flex; align-items: center; justify-content: center; color: #fff; font-size: 24px; margin-bottom: 14px; box-shadow: 0 8px 18px rgba(108, 92, 231, 0.35);">
+        <i class="fa-solid fa-shapes"></i>
+      </div>
+      <h2 style="font-size: 22px; font-weight: 800; color: var(--text-main);">Welcome to InsightFlow</h2>
+      <p style="font-size: 13px; color: var(--text-muted); margin-top: 4px;">Sign in to your Business Analytics Dashboard</p>
+    </div>
+
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div style="margin-bottom: 18px;">
+          {% for category, message in messages %}
+            <div class="alert alert-{{ category }}" style="font-size: 12.5px; padding: 10px 14px;">
+              {{ message }}
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    <form action="{{ url_for('auth.login') }}" method="POST">
+      <div class="form-group">
+        <label class="form-label">Username or Email</label>
+        <input type="text" name="identifier" id="identifierInput" class="form-control" placeholder="admin or admin@insightflow.io" required autofocus>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Password</label>
+        <input type="password" name="password" id="passwordInput" class="form-control" placeholder="••••••••" required>
+      </div>
+
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 22px; font-size: 13px;">
+        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; color: var(--text-muted);">
+          <input type="checkbox" name="remember" style="accent-color: var(--primary-purple);">
+          Remember me
+        </label>
+        <a href="#" style="color: var(--primary-purple); text-decoration: none; font-weight: 600;">Forgot password?</a>
+      </div>
+
+      <button type="submit" class="btn-export" style="width: 100%; justify-content: center; padding: 12px; font-size: 14.5px;">
+        Sign In
+      </button>
+    </form>
+
+    <!-- Quick Demo Fill Helper -->
+    <div style="margin-top: 20px; padding: 12px; border-radius: 10px; background: #F8FAFC; border: 1px dashed #CBD5E1; text-align: center;">
+      <span style="font-size: 12px; color: var(--text-muted);">Quick test?</span>
+      <button type="button" onclick="fillDemoCredentials()" style="background:none; border:none; color: var(--primary-purple); font-weight: 700; cursor: pointer; font-size: 12px; margin-left: 6px; text-decoration: underline;">
+        Click to autofill demo account
+      </button>
+    </div>
+
+    <div style="text-align: center; margin-top: 24px; font-size: 13.5px; color: var(--text-muted);">
+      Don't have an account yet? 
+      <a href="{{ url_for('auth.signup') }}" style="color: var(--primary-purple); font-weight: 700; text-decoration: none;">Create one here</a>
+    </div>
+  </div>
+
+  <script>
+    function fillDemoCredentials() {
+      document.getElementById('identifierInput').value = 'admin';
+      document.getElementById('passwordInput').value = 'admin123';
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+
+{% block title %}Upload Business Dataset — InsightFlow{% endblock %}
+
+{% block content %}
+<div class="header-actions-row">
+  <div>
+    <h1 class="page-title">Upload Dataset</h1>
+    <p class="page-subtitle">Upload your CSV or Excel business data files to generate instant analytics & dashboards.</p>
+  </div>
+  <a href="{{ url_for('datasets.list_datasets') }}" class="btn-pill-subtle">
+    <i class="fa-solid fa-arrow-left"></i>
+    <span>Back to Datasets</span>
+  </a>
+</div>
+
+<div style="max-width: 760px; margin: 20px auto;">
+  <div class="stat-card" style="padding: 36px;">
+    <form action="{{ url_for('datasets.upload') }}" method="POST" enctype="multipart/form-data" id="uploadForm">
+      <div id="dropZone" style="border: 2px dashed #CBD5E1; border-radius: 16px; padding: 48px 24px; text-align: center; background-color: #F8FAFC; cursor: pointer; transition: all 0.2s ease;">
+        <div style="width: 56px; height: 56px; background-color: #ECEBFC; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px auto; color: var(--primary-purple); font-size: 24px;">
+          <i class="fa-solid fa-cloud-arrow-up"></i>
+        </div>
+        <h3 style="font-size: 18px; font-weight: 700; margin-bottom: 8px;">Drag and drop your dataset here</h3>
+        <p style="color: var(--text-muted); font-size: 13.5px; margin-bottom: 18px;">
+          Supports <strong>.csv</strong>, <strong>.xlsx</strong>, and <strong>.xls</strong> spreadsheets up to 16MB.
+        </p>
+        <button type="button" class="btn-export" onclick="document.getElementById('fileInput').click();">
+          Browse Files
+        </button>
+        <input type="file" id="fileInput" name="file" accept=".csv, .xlsx, .xls" style="display: none;" onchange="updateFileName(this)">
+        <div id="selectedFileName" style="margin-top: 14px; font-weight: 600; color: var(--primary-purple); font-size: 14px;"></div>
+      </div>
+
+      <div style="margin-top: 24px; display: flex; justify-content: space-between; align-items: center;">
+        <span style="font-size: 12.5px; color: var(--text-muted);">
+          <i class="fa-solid fa-shield-halved" style="color: var(--accent-green);"></i> Data is stored securely and scoped only to your user account.
+        </span>
+        <button type="submit" class="btn-export" style="padding: 10px 24px;">
+          <i class="fa-solid fa-bolt"></i>
+          <span>Process & Analyze</span>
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Helpful Sample Data Box -->
+  <div class="stat-card" style="margin-top: 20px; padding: 20px;">
+    <h4 style="font-size: 14.5px; font-weight: 700; margin-bottom: 8px; display: flex; align-items: center; gap: 8px;">
+      <i class="fa-solid fa-lightbulb" style="color: var(--accent-amber);"></i>
+      <span>Need sample data to test?</span>
+    </h4>
+    <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 12px;">
+      InsightFlow comes pre-loaded with a high-fidelity synthetic sales dataset (`sample_data/sales_sample.csv`) containing 1,000+ business transactions with dates, channels, revenue, and product categories.
+    </p>
+    <a href="{{ url_for('analytics.dashboard') }}" class="btn-pill-subtle" style="display: inline-flex;">
+      <i class="fa-solid fa-chart-line"></i>
+      <span>Explore Dashboard With Benchmark Data</span>
+    </a>
+  </div>
+</div>
+
+<script>
+  function updateFileName(input) {
+    const display = document.getElementById('selectedFileName');
+    if (input.files && input.files[0]) {
+      display.innerHTML = '<i class="fa-solid fa-file-csv"></i> Selected: ' + input.files[0].name + ' (' + (input.files[0].size / 1024).toFixed(1) + ' KB)';
+      document.getElementById('dropZone').style.borderColor = 'var(--primary-purple)';
+      document.getElementById('dropZone').style.backgroundColor = 'var(--primary-purple-light)';
+    }
+  }
+
+  const dropZone = document.getElementById('dropZone');
+  ['dragenter', 'dragover'].forEach(eventName => {
+    dropZone.addEventListener(eventName, (e) => {
+      e.preventDefault();
+      dropZone.style.borderColor = 'var(--primary-purple)';
+      dropZone.style.backgroundColor = 'var(--primary-purple-light)';
+    });
+  });
+  ['dragleave', 'drop'].forEach(eventName => {
+    dropZone.addEventListener(eventName, (e) => {
+      e.preventDefault();
+      dropZone.style.borderColor = '#CBD5E1';
+      dropZone.style.backgroundColor = '#F8FAFC';
+    });
+  });
+  dropZone.addEventListener('drop', (e) => {
+    if (e.dataTransfer.files.length) {
+      document.getElementById('fileInput').files = e.dataTransfer.files;
+      updateFileName(document.getElementById('fileInput'));
+    }
+  });
+</script>
+{% endblock %}

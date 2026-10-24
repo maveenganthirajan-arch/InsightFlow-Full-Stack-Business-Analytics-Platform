@@ -1,0 +1,300 @@
+{% extends "base.html" %}
+
+{% block title %}Business Overview — InsightFlow{% endblock %}
+
+{% block content %}
+<!-- Header Action Row -->
+<div class="header-actions-row">
+  <div>
+    <h1 class="page-title">Business overview</h1>
+    <p class="page-subtitle">Revenue, customers and conversion</p>
+  </div>
+
+  <div class="header-controls">
+    <!-- Dataset Selector -->
+    {% if datasets %}
+    <select id="datasetSelect" class="select-pill" title="Select Active Dataset">
+      {% for d in datasets %}
+      <option value="{{ d.id }}" {% if current_dataset and current_dataset.id == d.id %}selected{% endif %}>
+        📊 {{ d.original_filename }}
+      </option>
+      {% endfor %}
+    </select>
+    {% endif %}
+
+    <!-- Year Filter -->
+    <select id="yearSelect" class="select-pill" title="Select Analysis Year">
+      {% for yr in kpis.available_years %}
+      <option value="{{ yr }}" {% if selected_year|int == yr|int %}selected{% endif %}>
+        📅 {{ yr }}
+      </option>
+      {% endfor %}
+    </select>
+
+    <!-- Quick Export Form -->
+    <form action="{{ url_for('reports.generate_report') }}" method="POST" style="display: inline;">
+      <input type="hidden" name="dataset_id" value="{{ current_dataset.id if current_dataset else '' }}">
+      <input type="hidden" name="year" value="{{ selected_year }}">
+      <input type="hidden" name="report_type" value="csv">
+      <input type="hidden" name="title" value="Business_Overview_{{ selected_year }}">
+      <button type="submit" class="btn-export">
+        <i class="fa-solid fa-arrow-down-to-bracket"></i>
+        <span>Export</span>
+      </button>
+    </form>
+  </div>
+</div>
+
+<!-- KPI Cards Row -->
+<div class="kpi-grid">
+  <!-- Card 1: Total Revenue -->
+  <div class="stat-card">
+    <div class="kpi-header">
+      <div class="kpi-icon-badge purple">
+        <i class="fa-solid fa-wallet"></i>
+      </div>
+      <span class="kpi-label">Total revenue</span>
+    </div>
+    <div class="kpi-body">
+      <div>
+        <div class="kpi-value">${{ "{:,.0f}".format(kpis.total_revenue) }}</div>
+        <div class="kpi-growth-row">
+          <span class="pill-growth">+{{ kpis.revenue_change_pct }}%</span>
+          <span class="growth-period">vs last year</span>
+        </div>
+      </div>
+      <svg class="sparkline-svg" viewBox="0 0 100 40">
+        <path d="M 0,32 Q 25,28 45,18 T 80,12 T 100,5" fill="none" stroke="#6C5CE7" stroke-width="2.8" stroke-linecap="round"/>
+      </svg>
+    </div>
+  </div>
+
+  <!-- Card 2: Paid Orders -->
+  <div class="stat-card">
+    <div class="kpi-header">
+      <div class="kpi-icon-badge cyan">
+        <i class="fa-solid fa-box-archive"></i>
+      </div>
+      <span class="kpi-label">Paid orders</span>
+    </div>
+    <div class="kpi-body">
+      <div>
+        <div class="kpi-value">{{ "{:,}".format(kpis.paid_orders) }}</div>
+        <div class="kpi-growth-row">
+          <span class="pill-growth">+{{ kpis.orders_change_pct }}%</span>
+          <span class="growth-period">vs last year</span>
+        </div>
+      </div>
+      <svg class="sparkline-svg" viewBox="0 0 100 40">
+        <path d="M 0,35 Q 20,32 40,24 T 75,18 T 100,6" fill="none" stroke="#00CEC9" stroke-width="2.8" stroke-linecap="round"/>
+      </svg>
+    </div>
+  </div>
+
+  <!-- Card 3: New Customers -->
+  <div class="stat-card">
+    <div class="kpi-header">
+      <div class="kpi-icon-badge amber">
+        <i class="fa-solid fa-user-group"></i>
+      </div>
+      <span class="kpi-label">New customers</span>
+    </div>
+    <div class="kpi-body">
+      <div>
+        <div class="kpi-value">{{ "{:,}".format(kpis.new_customers) }}</div>
+        <div class="kpi-growth-row">
+          <span class="pill-growth">+{{ kpis.customers_change_pct }}%</span>
+          <span class="growth-period">vs last year</span>
+        </div>
+      </div>
+      <svg class="sparkline-svg" viewBox="0 0 100 40">
+        <path d="M 0,35 Q 25,30 50,22 T 80,16 T 100,8" fill="none" stroke="#FFA502" stroke-width="2.8" stroke-linecap="round"/>
+      </svg>
+    </div>
+  </div>
+
+  <!-- Card 4: Conversion Rate -->
+  <div class="stat-card">
+    <div class="kpi-header">
+      <div class="kpi-icon-badge green">
+        <i class="fa-solid fa-bullseye"></i>
+      </div>
+      <span class="kpi-label">Conversion rate</span>
+    </div>
+    <div class="kpi-body">
+      <div>
+        <div class="kpi-value">{{ kpis.conversion_rate }}%</div>
+        <div class="kpi-growth-row">
+          <span class="pill-growth">+{{ kpis.conversion_change_pp }} pp</span>
+          <span class="growth-period">vs last year</span>
+        </div>
+      </div>
+      <svg class="sparkline-svg" viewBox="0 0 100 40">
+        <path d="M 0,33 Q 30,30 55,20 T 80,14 T 100,4" fill="none" stroke="#10B981" stroke-width="2.8" stroke-linecap="round"/>
+      </svg>
+    </div>
+  </div>
+</div>
+
+<!-- Middle Grid: Revenue Trend & Revenue by Channel -->
+<div class="charts-grid-middle">
+  <!-- Revenue Trend Line Chart -->
+  <div class="chart-card">
+    <div class="chart-header">
+      <h3 class="chart-title">Revenue trend</h3>
+      <div style="display: flex; align-items: center; gap: 18px;">
+        <div class="chart-legend-top">
+          <span><i class="legend-dot" style="background-color: #6C5CE7;"></i> This year</span>
+          <span><i class="legend-dot" style="background-color: #C4C2FD;"></i> Last year</span>
+        </div>
+        <button class="btn-card-menu" title="Options"><i class="fa-solid fa-ellipsis"></i></button>
+      </div>
+    </div>
+    <div style="height: 250px; position: relative;">
+      <canvas id="revenueTrendCanvas"></canvas>
+    </div>
+  </div>
+
+  <!-- Revenue By Channel Donut Chart -->
+  <div class="chart-card">
+    <div class="chart-header">
+      <h3 class="chart-title">Revenue by channel</h3>
+      <button class="btn-card-menu" title="Options"><i class="fa-solid fa-ellipsis"></i></button>
+    </div>
+    <div class="donut-chart-container">
+      <div class="donut-canvas-wrapper">
+        <canvas id="revenueChannelCanvas"></canvas>
+        <div class="donut-center-label">
+          <span class="amount">${{ "{:,.0f}".format(kpis.total_revenue / 1000) }}k</span>
+          <span class="sub">Revenue</span>
+        </div>
+      </div>
+      <div class="channel-legend-list">
+        {% set colors = ['#6C5CE7', '#00CEC9', '#45AAF2', '#FFA502'] %}
+        {% for ch in kpis.channels %}
+        <div class="channel-legend-item">
+          <div class="channel-name">
+            <span class="legend-dot" style="background-color: {{ colors[loop.index0 % 4] }};"></span>
+            <span>{{ ch.channel }}</span>
+          </div>
+          <span class="channel-percent">{{ ch.percentage }}%</span>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    <div class="donut-footer-row">
+      <span class="donut-footer-label">Annual total</span>
+      <span class="donut-footer-val">${{ "{:,.0f}".format(kpis.total_revenue) }}</span>
+    </div>
+  </div>
+</div>
+
+<!-- Bottom Grid: Orders by Quarter, Annual Targets, Revenue Sources -->
+<div class="charts-grid-bottom">
+  <!-- Orders by Quarter Bar Chart -->
+  <div class="chart-card">
+    <div class="chart-header">
+      <h3 class="chart-title">Orders by quarter</h3>
+      <div class="chart-legend-top">
+        <span><i class="legend-dot" style="background-color: #6C5CE7;"></i> {{ kpis.current_year }}</span>
+        <span><i class="legend-dot" style="background-color: #D6D4FF;"></i> {{ kpis.previous_year }}</span>
+      </div>
+    </div>
+    <div style="height: 180px; position: relative;">
+      <canvas id="ordersQuarterCanvas"></canvas>
+    </div>
+  </div>
+
+  <!-- Annual Targets Progress Meters -->
+  <div class="chart-card">
+    <div class="chart-header">
+      <h3 class="chart-title">Annual targets</h3>
+      <button class="btn-card-menu" title="Options"><i class="fa-solid fa-ellipsis"></i></button>
+    </div>
+    <div class="targets-list">
+      <!-- Target: Revenue -->
+      <div>
+        <div class="target-item-header">
+          <span class="target-label">Revenue</span>
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <span class="target-numbers">${{ "{:,.1f}".format(kpis.targets.revenue.actual / 1000) }}k / ${{ "{:,.0f}".format(kpis.targets.revenue.target / 1000) }}k</span>
+            <span class="target-percent-badge">{{ kpis.targets.revenue.percent }}%</span>
+          </div>
+        </div>
+        <div class="progress-track">
+          <div class="progress-fill" style="width: {{ kpis.targets.revenue.percent }}%; background-color: #6C5CE7;"></div>
+        </div>
+      </div>
+
+      <!-- Target: Orders -->
+      <div>
+        <div class="target-item-header">
+          <span class="target-label">Orders</span>
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <span class="target-numbers">{{ "{:,}".format(kpis.targets.orders.actual) }} / {{ "{:,}".format(kpis.targets.orders.target) }}</span>
+            <span class="target-percent-badge">{{ kpis.targets.orders.percent }}%</span>
+          </div>
+        </div>
+        <div class="progress-track">
+          <div class="progress-fill" style="width: {{ kpis.targets.orders.percent }}%; background-color: #00CEC9;"></div>
+        </div>
+      </div>
+
+      <!-- Target: Customers -->
+      <div>
+        <div class="target-item-header">
+          <span class="target-label">Customers</span>
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <span class="target-numbers">{{ "{:,}".format(kpis.targets.customers.actual) }} / {{ "{:,}".format(kpis.targets.customers.target) }}</span>
+            <span class="target-percent-badge">{{ kpis.targets.customers.percent }}%</span>
+          </div>
+        </div>
+        <div class="progress-track">
+          <div class="progress-fill" style="width: {{ kpis.targets.customers.percent }}%; background-color: #FFA502;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Revenue Sources / Products Table -->
+  <div class="chart-card">
+    <div class="chart-header">
+      <h3 class="chart-title">Revenue sources</h3>
+      <button class="btn-card-menu" title="Options"><i class="fa-solid fa-ellipsis"></i></button>
+    </div>
+    <table class="sources-table">
+      <thead>
+        <tr>
+          <th>Product</th>
+          <th>Revenue</th>
+          <th style="text-align: right;">YoY</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% set prod_icons = ['fa-file-lines', 'fa-screwdriver-wrench', 'fa-arrow-down'] %}
+        {% for src in kpis.revenue_sources %}
+        <tr>
+          <td>
+            <div class="product-cell">
+              <div class="product-icon">
+                <i class="fa-solid {{ prod_icons[loop.index0 % 3] }}"></i>
+              </div>
+              <span>{{ src.product }}</span>
+            </div>
+          </td>
+          <td style="font-weight: 700;">${{ "{:,.0f}".format(src.revenue) }}</td>
+          <td style="text-align: right;"><span class="badge-yoy">{{ src.yoy_change }}</span></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  // Injected server-calculated chart data
+  window.dashboardChartData = {{ charts|tojson }};
+</script>
+{% endblock %}

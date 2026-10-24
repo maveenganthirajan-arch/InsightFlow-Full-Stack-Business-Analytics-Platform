@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Account — InsightFlow</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <style>
+    body {
+      background: linear-gradient(135deg, #151928 0%, #1E2338 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+    .auth-card {
+      background: #FFFFFF;
+      width: 100%;
+      max-width: 440px;
+      border-radius: 20px;
+      padding: 40px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+    }
+    .form-group {
+      margin-bottom: 16px;
+    }
+    .form-label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-main);
+      margin-bottom: 6px;
+    }
+    .form-control {
+      width: 100%;
+      padding: 11px 16px;
+      border-radius: 10px;
+      border: 1px solid var(--border-subtle);
+      font-size: 14px;
+      outline: none;
+      transition: all 0.2s ease;
+    }
+    .form-control:focus {
+      border-color: var(--primary-purple);
+      box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.15);
+    }
+  </style>
+</head>
+<body>
+  <div class="auth-card">
+    <div style="text-align: center; margin-bottom: 24px;">
+      <div style="width: 52px; height: 52px; background: linear-gradient(135deg, #6C5CE7, #8072FA); border-radius: 14px; display: inline-flex; align-items: center; justify-content: center; color: #fff; font-size: 24px; margin-bottom: 12px; box-shadow: 0 8px 18px rgba(108, 92, 231, 0.35);">
+        <i class="fa-solid fa-shapes"></i>
+      </div>
+      <h2 style="font-size: 22px; font-weight: 800; color: var(--text-main);">Create Your Account</h2>
+      <p style="font-size: 13px; color: var(--text-muted); margin-top: 4px;">Get instant access to InsightFlow Analytics</p>
+    </div>
+
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div style="margin-bottom: 16px;">
+          {% for category, message in messages %}
+            <div class="alert alert-{{ category }}" style="font-size: 12.5px; padding: 10px 14px;">
+              {{ message }}
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    <form action="{{ url_for('auth.signup') }}" method="POST">
+      <div class="form-group">
+        <label class="form-label">Username</label>
+        <input type="text" name="username" class="form-control" placeholder="e.g. data_analyst" required>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Email Address</label>
+        <input type="email" name="email" class="form-control" placeholder="name@company.com" required>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Password</label>
+        <input type="password" name="password" class="form-control" placeholder="Minimum 6 characters" required>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Confirm Password</label>
+        <input type="password" name="confirm_password" class="form-control" placeholder="Re-enter password" required>
+      </div>
+
+      <button type="submit" class="btn-export" style="width: 100%; justify-content: center; padding: 12px; font-size: 14.5px; margin-top: 8px;">
+        Register & Launch Dashboard
+      </button>
+    </form>
+
+    <div style="text-align: center; margin-top: 22px; font-size: 13.5px; color: var(--text-muted);">
+      Already have an account? 
+      <a href="{{ url_for('auth.login') }}" style="color: var(--primary-purple); font-weight: 700; text-decoration: none;">Sign in here</a>
+    </div>
+  </div>
+</body>
+</html>

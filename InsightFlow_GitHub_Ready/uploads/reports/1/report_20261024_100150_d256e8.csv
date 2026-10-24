@@ -1,0 +1,25 @@
+InsightFlow Business Analytics Executive Report
+Generated At,2026-10-24 10:01:50 UTC
+Year,2024
+Dataset,Sales_Transactions_2024_2025.csv
+
+Metric,Value,YoY Growth / Change
+Total Revenue,"$5,180.00",+16.8%
+Paid Orders,12,+20.0%
+New Customers,11,+10.0%
+Conversion Rate,3.82%,+0.42 pp
+Total Profit,"$3,351.90",64.7% Margin
+
+Acquisition Channel Breakdown
+Channel,Revenue,Share (%)
+Search,"$2,260.00",43.6%
+Direct,"$1,530.00",29.5%
+Referrals,$840.00,16.2%
+Social,$550.00,10.6%
+
+Quarterly Orders
+Quarter,Orders (2024),Prior Year
+Q1,3,2
+Q2,3,2
+Q3,3,2
+Q4,3,2

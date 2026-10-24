@@ -1,0 +1,151 @@
+{% extends "base.html" %}
+
+{% block title %}Clean Dataset: {{ dataset.original_filename }} — InsightFlow{% endblock %}
+
+{% block content %}
+<div class="header-actions-row">
+  <div>
+    <h1 class="page-title">Data Cleaning Workbench</h1>
+    <p class="page-subtitle">Configure automated cleaning rules to prepare <strong>{{ dataset.original_filename }}</strong> for executive reporting.</p>
+  </div>
+  <a href="{{ url_for('datasets.view_dataset', dataset_id=dataset.id) }}" class="btn-pill-subtle">
+    <i class="fa-solid fa-arrow-left"></i>
+    <span>Back to Details</span>
+  </a>
+</div>
+
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+  <!-- Left Column: Configurable Actions Form -->
+  <div class="stat-card" style="padding: 28px;">
+    <h3 style="font-size: 17px; font-weight: 700; margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
+      <i class="fa-solid fa-sliders" style="color: var(--primary-purple);"></i>
+      <span>Cleaning Operations</span>
+    </h3>
+
+    <form action="{{ url_for('analytics.clean', dataset_id=dataset.id) }}" method="POST">
+      <!-- 1. Remove Duplicates -->
+      <div style="margin-bottom: 18px; padding-bottom: 16px; border-bottom: 1px solid var(--border-subtle);">
+        <label style="display: flex; align-items: flex-start; gap: 12px; cursor: pointer;">
+          <input type="checkbox" name="remove_duplicates" value="1" checked style="width: 18px; height: 18px; accent-color: var(--primary-purple); margin-top: 2px;">
+          <div>
+            <div style="font-weight: 700; font-size: 14px;">Remove Duplicate Records</div>
+            <div style="font-size: 12.5px; color: var(--text-muted);">
+              Detect and eliminate identical rows across the dataset. Currently found: <strong>{{ inspection.duplicate_rows }} duplicates</strong>.
+            </div>
+          </div>
+        </label>
+      </div>
+
+      <!-- 2. Column Standardizing -->
+      <div style="margin-bottom: 18px; padding-bottom: 16px; border-bottom: 1px solid var(--border-subtle);">
+        <label style="display: flex; align-items: flex-start; gap: 12px; cursor: pointer;">
+          <input type="checkbox" name="standardize_column_names" value="1" checked style="width: 18px; height: 18px; accent-color: var(--primary-purple); margin-top: 2px;">
+          <div>
+            <div style="font-weight: 700; font-size: 14px;">Standardize Column Headers</div>
+            <div style="font-size: 12.5px; color: var(--text-muted);">
+              Convert headers to clean <code>snake_case</code>, trim whitespace, and strip invalid punctuation.
+            </div>
+          </div>
+        </label>
+      </div>
+
+      <!-- 3. Missing Values Strategy -->
+      <div style="margin-bottom: 18px; padding-bottom: 16px; border-bottom: 1px solid var(--border-subtle);">
+        <label style="font-weight: 700; font-size: 14px; display: block; margin-bottom: 6px;">
+          Missing Value Imputation Strategy
+        </label>
+        <p style="font-size: 12.5px; color: var(--text-muted); margin-bottom: 10px;">
+          Select how unpopulated null or NaN values should be resolved.
+        </p>
+        <select name="missing_action" class="select-pill" style="width: 100%;">
+          <option value="fill_mean_mode" selected>Smart Impute (Numeric Median + Categorical Mode)</option>
+          <option value="drop">Drop Rows with Missing Values</option>
+          <option value="fill_zero">Replace Missing Values with 0 / Blank</option>
+          <option value="ffill">Forward Fill & Backward Fill (Time Series)</option>
+          <option value="none">Keep Missing Values As-Is</option>
+        </select>
+      </div>
+
+      <!-- 4. Parse Dates -->
+      <div style="margin-bottom: 18px; padding-bottom: 16px; border-bottom: 1px solid var(--border-subtle);">
+        <label style="display: flex; align-items: flex-start; gap: 12px; cursor: pointer;">
+          <input type="checkbox" name="convert_dates" value="1" checked style="width: 18px; height: 18px; accent-color: var(--primary-purple); margin-top: 2px;">
+          <div>
+            <div style="font-weight: 700; font-size: 14px;">Auto-Convert Date & Timestamp Columns</div>
+            <div style="font-size: 12.5px; color: var(--text-muted);">
+              Detect order dates and transaction timestamps to enable year/month/quarter aggregations.
+            </div>
+          </div>
+        </label>
+      </div>
+
+      <!-- 5. Drop Empty Columns -->
+      <div style="margin-bottom: 24px;">
+        <label style="display: flex; align-items: flex-start; gap: 12px; cursor: pointer;">
+          <input type="checkbox" name="drop_empty_cols" value="1" style="width: 18px; height: 18px; accent-color: var(--primary-purple); margin-top: 2px;">
+          <div>
+            <div style="font-weight: 700; font-size: 14px;">Drop 100% Empty Columns</div>
+            <div style="font-size: 12.5px; color: var(--text-muted);">
+              Remove any columns where every single entry is missing.
+            </div>
+          </div>
+        </label>
+      </div>
+
+      <button type="submit" class="btn-export" style="width: 100%; justify-content: center; padding: 12px;">
+        <i class="fa-solid fa-wand-magic-sparkles"></i>
+        <span>Execute Cleaning Pipeline</span>
+      </button>
+    </form>
+  </div>
+
+  <!-- Right Column: Current Quality Inspection -->
+  <div class="stat-card" style="padding: 28px;">
+    <h3 style="font-size: 17px; font-weight: 700; margin-bottom: 16px; display: flex; align-items: center; gap: 10px;">
+      <i class="fa-solid fa-clipboard-check" style="color: var(--accent-green);"></i>
+      <span>Current Data Health Check</span>
+    </h3>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px;">
+      <div style="background-color: #F8FAFC; padding: 14px; border-radius: 12px; border: 1px solid var(--border-subtle);">
+        <div style="font-size: 12px; color: var(--text-muted);">Total Rows</div>
+        <div style="font-size: 20px; font-weight: 800; color: var(--text-main);">{{ "{:,}".format(inspection.total_rows) }}</div>
+      </div>
+      <div style="background-color: #F8FAFC; padding: 14px; border-radius: 12px; border: 1px solid var(--border-subtle);">
+        <div style="font-size: 12px; color: var(--text-muted);">Duplicate Rows</div>
+        <div style="font-size: 20px; font-weight: 800; color: {% if inspection.duplicate_rows > 0 %}#EF4444{% else %}var(--accent-green){% endif %};">
+          {{ inspection.duplicate_rows }}
+        </div>
+      </div>
+    </div>
+
+    <h4 style="font-size: 13.5px; font-weight: 700; margin-bottom: 12px;">Missing Values by Column:</h4>
+    <div style="max-height: 320px; overflow-y: auto;">
+      <table class="sources-table">
+        <thead>
+          <tr>
+            <th>Column</th>
+            <th>Nulls</th>
+            <th>Missing %</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for col, info in inspection.missing_info.items() %}
+          <tr>
+            <td style="font-weight: 600;">{{ col }}</td>
+            <td>{{ info.count }}</td>
+            <td>
+              {% if info.percent > 0 %}
+              <span style="color: #EF4444; font-weight: 700;">{{ info.percent }}%</span>
+              {% else %}
+              <span style="color: var(--accent-green);">0%</span>
+              {% endif %}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}
