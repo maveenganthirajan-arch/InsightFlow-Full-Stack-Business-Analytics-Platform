@@ -155,6 +155,3 @@ All 11 tests across authentication, dataset uploads, automated cleaning, and KPI
 
 ---
 
-## 📄 License
-
-Distributed under the MIT License. See [LICENSE](LICENSE) for more details.
