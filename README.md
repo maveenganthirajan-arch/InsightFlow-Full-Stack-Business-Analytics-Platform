@@ -36,7 +36,7 @@ Run:
 powershell
 python run.py
 # 1. Navigate to the project directory
-cd InsightFlow
+cd InsightFlow_GitHub_Ready
 
 # 2. Create and activate a Python virtual environment
 python -m venv venv
